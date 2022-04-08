@@ -1,7 +1,8 @@
-import {View, Text, TextInput, TouchableOpacity, Alert} from "react-native";
+import {Alert, Modal, Text, TextInput, TouchableOpacity, View} from "react-native";
 import {Picker} from '@react-native-picker/picker';
 import styles from "../../styles";
 import {useState} from "react";
+import ACamera from "../ACamera";
 
 export default function Form() {
   const [cidade, setCidade] = useState("default");
@@ -9,13 +10,23 @@ export default function Form() {
   const [rua, setRua] = useState(null);
   const [numero, setNumero] = useState(null);
   const [descricao, setDescricao] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
 
   function validate() {
     if (cidade !== "default" && bairro != null && rua != null && numero != null && descricao != null) {
-      console.log(cidade + bairro + rua + numero + descricao)
+      setIsOpen(true);
     } else {
       Alert.alert('É necessário preencher todos os campos do formulário!')
     }
+  }
+
+  function repetition() {
+    setIsOpen(false);
+    setCidade("default");
+    setBairro(null);
+    setRua(null);
+    setNumero(null);
+    setDescricao(null);
   }
 
   return (
@@ -69,6 +80,19 @@ export default function Form() {
       >
         <Text style={styles.formButtonText}>Notificar</Text>
       </TouchableOpacity>
+      <Modal
+        transparent={true}
+        visible={isOpen}
+      >
+        <ACamera
+          cidade={cidade}
+          bairro={bairro}
+          rua={rua}
+          numero={numero}
+          descricao={descricao}
+          repetition={repetition}
+        />
+      </Modal>
     </View>
   )
 }
